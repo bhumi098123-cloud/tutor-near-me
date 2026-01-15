@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mumbai Tutors - Find Best Local Teachers</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root {
+      --primary: #25eb85;         
+      --primary-dark: #1dd874;    
+      --light: #f0f9ff;           
+      --dark: #0f172a;
+      --gray: #64748b;
+      --success: #16a32d;
+      --warning: #ea580c;
+      --danger: #dc2626;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 2.5rem 0;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .search-filter-section {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      padding: 1.8rem;
+      margin-bottom: 2rem;
+    }
+
+    .search-bar {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    #searchInput {
+      width: 100%;
+      padding: 1rem 1rem 1rem 3.5rem;
+      border: 2px solid #bfdbfe;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+    }
+
+    #searchInput:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.15);
+    }
+
+    #search-icon {
+      position: absolute;
+      left: 1.2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+      font-size: 1.3rem;
+    }
+
+    #filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .filter-group {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    select, input[type="text"] {
+      width: 100%;
+      padding: 0.9rem;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    #cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.8rem;
+    }
+
+    #service-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(37,99,235,0.1);
+      transition: all 0.3s ease;
+    }
+
+    #service-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 35px rgba(37,99,235,0.15);
+    }
+
+    #card-header {
+      height: 140px;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.9rem;
+      font-weight: bold;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    #card-body {
+      padding: 1.4rem;
+    }
+
+    #service-name {
+      font-size: 1.4rem;
+      margin-bottom: 0.6rem;
+      color: var(--dark);
+    }
+
+    #meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      margin: 1rem 0;
+      color: var(--gray);
+    }
+
+    #meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    #status {
+      padding: 0.35rem 0.9rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .status.available { background: #d1fae5; color: #065f46; }
+    .status.busy     { background: #fef3c7; color: #92400e; }
+    .status.offline  { background: #fee2e2; color: #991b1b; }
+
+    .rating {
+      color: #f59e0b;
+      font-size: 1.1rem;
+      margin-top: 0.8rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 5rem 1rem;
+      color: var(--gray);
+      font-size: 1.3rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 4rem;
+      font-size: 1.3rem;
+      color: var(--gray);
+    }
+
+    @media (max-width: 768px) {
+      .cards-container { grid-template-columns: 1fr; }
+      h1 { font-size: 2.2rem; }
+      .filters { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <h1>Mumbai Tutors</h1>
+      <p>Find experienced local teachers & tutors near you in Mumbai</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="search-filter-section">
+      <div class="search-bar">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="searchInput" placeholder="Search tutors by name or subject..."/>
+      </div>
+
+      <div class="filters">
+        <div class="filter-group">
+          <select id="categoryFilter">
+            <option value="">All Subjects</option>
+            <option value="Maths">Maths</option>
+            <option value="Science">Science</option>
+            <option value="English">English</option>
+            <option value="Hindi">Hindi</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Physics">Physics</option>
+            <option value="Sanskrit">Sanskrit</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <select id="locationFilter">
+            <option value="">All Mumbai Areas</option>
+            <option value="Andheri">Andheri</option>
+            <option value="Borivali">Borivali</option>
+            <option value="Thane">Thane</option>
+            <option value="Dadar">Dadar</option>
+            <option value="Chembur">Chembur</option>
+            <option value="Powai">Powai</option>
+            <option value="Vashi">Vashi</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <select id="statusFilter">
+            <option value="">Any Availability</option>
+            <option value="Available">Available Now</option>
+            <option value="Busy">Busy</option>
+            <option value="Offline">Offline</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div id="loading" class="loading" style="display:none;">
+      <i class="fas fa-spinner fa-spin"></i> Loading tutors...
+    </div>
+
+    <div id="noResults" class="empty-state" style="display:none;">
+      <i class="fas fa-search fa-3x" style="margin-bottom:1rem; opacity:0.6;"></i><br>
+      No tutors found matching your criteria
+    </div>
+
+    <div id="servicesContainer" class="cards-container"></div>
+  </div>
+
+  <script>
+    
+    let services = []; // Global variable
+
+// Load data from JSON file
+fetch('services.json')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to load services.json');
+    }
+    return response.json();
+  })
+  .then(data => {
+    services = data;
+    filterServices(); // Initial render after data loads
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    // Optional: Show error message on page
+    document.getElementById('noResults').innerHTML = '<p style="color:red;">Error loading data. Please try again later.</p>';
+    document.getElementById('noResults').style.display = 'block';
+  });
+
+      
+
+    const container = document.getElementById('servicesContainer');
+    const noResults = document.getElementById('noResults');
+    const loading = document.getElementById('loading');
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const locationFilter = document.getElementById('locationFilter');
+    const statusFilter = document.getElementById('statusFilter');
+
+    function renderServices(filteredServices) {
+      container.innerHTML = '';
+
+      if (filteredServices.length === 0) {
+        noResults.style.display = 'block';
+        return;
+      }
+
+      noResults.style.display = 'none';
+
+      filteredServices.forEach(service => {
+        const card = document.createElement('div');
+        card.className = 'service-card';
+
+        card.innerHTML = `
+          <div class="card-header">
+            ${service.category}
+          </div>
+          <div class="card-body">
+            <h3 class="service-name">${service.name}</h3>
+            
+            <div class="meta">
+              <div class="meta-item">
+                <i class="fas fa-map-marker-alt"></i>
+                ${service.location}
+              </div>
+              <div class="meta-item">
+                <i class="fas fa-clock"></i>
+                <span class="status \( {service.status.toLowerCase()}"> \){service.status}</span>
+              </div>
+            </div>
+
+            <div class="rating">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+              ${service.rating}
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function filterServices() {
+      const searchTerm = searchInput.value.toLowerCase().trim();
+      const category = categoryFilter.value;
+      const location = locationFilter.value;
+      const status = statusFilter.value;
+
+      loading.style.display = 'block';
+
+      setTimeout(() => {
+        const filtered = services.filter(s => {
+          const matchSearch = !searchTerm || 
+            s.name.toLowerCase().includes(searchTerm) || 
+            s.category.toLowerCase().includes(searchTerm);
+
+          const matchCategory = !category || s.category === category;
+          const matchLocation = !location || s.location === location;
+          const matchStatus   = !status   || s.status === status;
+
+          return matchSearch && matchCategory && matchLocation && matchStatus;
+        });
+
+        renderServices(filtered);
+        loading.style.display = 'none';
+      }, 400);
+    }
+
+    // Real-time filtering
+    searchInput.addEventListener('input', filterServices);
+    categoryFilter.addEventListener('change', filterServices);
+    locationFilter.addEventListener('change', filterServices);
+    statusFilter.addEventListener('change', filterServices);
+
+    // Initial load
+    filterServices();
+  </script>
+</body>
+</html>
