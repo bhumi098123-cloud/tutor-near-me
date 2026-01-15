@@ -7,12 +7,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
     :root {
-      --primary: #25eb85;         
-      --primary-dark: #1dd874;    
-      --light: #f0f9ff;           
+      --primary: #2563eb;         /* Main blue */
+      --primary-dark: #1d4ed8;    /* Darker blue */
+      --light: #f0f9ff;           /* Light blue background */
       --dark: #0f172a;
       --gray: #64748b;
-      --success: #16a32d;
+      --success: #16a34a;
       --warning: #ea580c;
       --danger: #dc2626;
     }
@@ -77,7 +77,7 @@
       box-shadow: 0 0 0 4px rgba(37,99,235,0.15);
     }
 
-    #search-icon {
+    .search-icon {
       position: absolute;
       left: 1.2rem;
       top: 50%;
@@ -86,7 +86,7 @@
       font-size: 1.3rem;
     }
 
-    #filters {
+    .filters {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
@@ -105,13 +105,13 @@
       font-size: 1rem;
     }
 
-    #cards-container {
+    .cards-container {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 1.8rem;
     }
 
-    #service-card {
+    .service-card {
       background: white;
       border-radius: 12px;
       overflow: hidden;
@@ -119,12 +119,12 @@
       transition: all 0.3s ease;
     }
 
-    #service-card:hover {
+    .service-card:hover {
       transform: translateY(-8px);
       box-shadow: 0 12px 35px rgba(37,99,235,0.15);
     }
 
-    #card-header {
+    .card-header {
       height: 140px;
       background: linear-gradient(135deg, #3b82f6, #2563eb);
       display: flex;
@@ -137,17 +137,17 @@
       padding: 1rem;
     }
 
-    #card-body {
+    .card-body {
       padding: 1.4rem;
     }
 
-    #service-name {
+    .service-name {
       font-size: 1.4rem;
       margin-bottom: 0.6rem;
       color: var(--dark);
     }
 
-    #meta {
+    .meta {
       display: flex;
       flex-wrap: wrap;
       gap: 1.2rem;
@@ -155,14 +155,14 @@
       color: var(--gray);
     }
 
-    #meta-item {
+    .meta-item {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       font-size: 0.95rem;
     }
 
-    #status {
+    .status {
       padding: 0.35rem 0.9rem;
       border-radius: 50px;
       font-size: 0.85rem;
@@ -226,7 +226,6 @@
             <option value="Hindi">Hindi</option>
             <option value="Computer Science">Computer Science</option>
             <option value="Physics">Physics</option>
-            <option value="Sanskrit">Sanskrit</option>
           </select>
         </div>
 
@@ -267,29 +266,19 @@
   </div>
 
   <script>
-    
-    let services = []; // Global variable
-
-// Load data from JSON file
-fetch('services.json')
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Failed to load services.json');
-    }
-    return response.json();
-  })
-  .then(data => {
-    services = data;
-    filterServices(); // Initial render after data loads
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    // Optional: Show error message on page
-    document.getElementById('noResults').innerHTML = '<p style="color:red;">Error loading data. Please try again later.</p>';
-    document.getElementById('noResults').style.display = 'block';
-  });
-
-      
+    // Data: 9 Tutors + 1 Plumber (as requested)
+    const services = [
+      { id:1, name:"Bhumika Pandey", category:"Maths", location:"Andheri", status:"Available", rating:4.9 },
+      { id:2, name:"Jagriti Vishwakarma", category:"Science", location:"Borivali", status:"Available", rating:4.8 },
+      { id:3, name:"Priya Sharma", category:"English", location:"Thane", status:"Busy", rating:4.7 },
+      { id:4, name:"Amit Kumar", category:"Computer Science", location:"Dadar", status:"Available", rating:4.9 },
+      { id:5, name:"Neha Singh", category:"Hindi", location:"Chembur", status:"Offline", rating:4.6 },
+      { id:6, name:"Rahul Verma", category:"Physics", location:"Powai", status:"Available", rating:4.8 },
+      { id:7, name:"Sneha Kapoor", category:"Maths", location:"Vashi", status:"Busy", rating:5.0 },
+      { id:8, name:"Vikram Mehta", category:"Computer Science", location:"Andheri", status:"Available", rating:4.7 },
+      { id:9, name:"Anjali Desai", category:"Science", location:"Borivali", status:"Offline", rating:4.8 },
+      { id:10, name:"QuickFix Plumbing (Only One)", category:"Plumber", location:"Chembur", status:"Available", rating:4.5 }
+    ];
 
     const container = document.getElementById('servicesContainer');
     const noResults = document.getElementById('noResults');
